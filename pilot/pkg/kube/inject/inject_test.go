@@ -507,6 +507,17 @@ func TestIntoResourceFile(t *testing.T) {
 				"{{ valueOrDefault .DeploymentMeta.Namespace \"default\" }}.global",
 			},
 		},
+		{
+			// Verifies that the correct environment variables are set for the proxy from the pod annotation
+			in:                           "hello-proxy-env-var-annotation.yaml",
+			want:                         "hello-proxy-env-var-annotation.yaml.injected",
+			includeIPRanges:              DefaultIncludeIPRanges,
+			includeInboundPorts:          DefaultIncludeInboundPorts,
+			statusPort:                   DefaultStatusPort,
+			readinessInitialDelaySeconds: DefaultReadinessInitialDelaySeconds,
+			readinessPeriodSeconds:       DefaultReadinessPeriodSeconds,
+			readinessFailureThreshold:    DefaultReadinessFailureThreshold,
+		},
 	}
 
 	for i, c := range cases {

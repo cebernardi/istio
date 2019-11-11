@@ -212,6 +212,13 @@ containers:
   - name: ISTIO_META_SDS_TOKEN_PATH
     value: "{{ .Values.global.sds.customTokenDirectory -}}/sdstoken"
   {{- end }}
+  {{- if (isset .ObjectMeta.Annotations `sidecar.istio.io/environmentOverride`) }}
+  {{ $overrideEnvs := fromJSON (index .ObjectMeta.Annotations `sidecar.istio.io/environmentOverride`) }}
+  {{- range $key, $value := $overrideEnvs }}
+  - name: "{{ $key }}"
+    value: "{{ $value }}"
+  {{- end }}
+  {{- end }}
   imagePullPolicy: {{ .Values.global.imagePullPolicy }}
   {{ if ne (annotation .ObjectMeta `status.sidecar.istio.io/port` .Values.global.proxy.statusPort) `0` }}
   readinessProbe:
